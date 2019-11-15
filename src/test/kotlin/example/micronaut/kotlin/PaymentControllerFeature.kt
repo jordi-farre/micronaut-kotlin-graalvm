@@ -5,6 +5,7 @@ import io.micronaut.test.annotation.MicronautTest
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
 import io.restassured.http.ContentType.JSON
+import org.hamcrest.Matcher
 import org.hamcrest.Matchers.matchesPattern
 import org.junit.jupiter.api.Test
 import javax.inject.Inject
@@ -25,7 +26,10 @@ class PaymentControllerFeature {
             .post("/payments")
         .then()
             .statusCode(200)
-            .body("transactionId", matchesPattern("([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})"))
+            .body("transactionId", matchesUUID())
     }
+
+    private fun matchesUUID(): Matcher<String> =
+            matchesPattern("([a-f0-9]{8}(-[a-f0-9]{4}){4}[a-f0-9]{8})")
 
 }
